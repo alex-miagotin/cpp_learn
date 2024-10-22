@@ -22,7 +22,7 @@ jobs:
 
     - name: Configure conan
       run: |
-        chmod +x ./scripts/conan_config.sh
+        chmod +x ./scripts/conan_build.sh
         ./scripts/conan_build.sh
       shell: bash
 
