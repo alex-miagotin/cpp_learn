@@ -21,8 +21,14 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Configure conan
-      run: ./scripts/conan_build.sh
+      run: |
+        chmod +x ./scripts/conan_config.sh
+        ./scripts/conan_build.sh
+      shell: bash
 
     - name: Configure CMake & Build
-      run: ./scripts/build.sh
+      run: |
+        chmod +x ./scripts/build.sh
+        ./scripts/build.sh
+      shell: bash
 
