@@ -1,0 +1,41 @@
+name: Windows build
+
+on:
+  push:
+    branches: [ "development" ]
+  pull_request:
+    branches: [ "development" ]
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+  PROJECT_NAME: Fighter
+
+jobs:
+  build:
+    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
+    # You can convert this to a matrix build if you need cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Configure conan
+      run: |
+        chmod +x ./scripts/conan_build.sh
+        ./scripts/conan_build.sh
+      shell: bash
+
+    - name: Configure CMake & Build
+      run: |
+        chmod +x ./scripts/build.sh
+        ./scripts/build.sh
+      shell: bash
+
+    # - name: Upload Artifacts
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: ${{env.PROJECT_NAME}}-${{env.BUILD_TYPE}}
+    #     path: ./build/bin
+
