@@ -34,5 +34,7 @@ jobs:
       shell: bash
 
     - name: GitHub Archive Action
-      uses: githubocto/github-archive-action@v1.0.0
+      shell: bash
+      run: |
+        zip -r ${{env.PROJECT_NAME}}.zip ./build/bin
 
