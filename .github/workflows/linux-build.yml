@@ -33,11 +33,6 @@ jobs:
         ./scripts/build.sh
       shell: bash
 
-    - name: archiver-action
-      uses: Lauweal/archiver-action@v1.0.6
-      with:
-        type: zip
-        name: ${{env.PROJECT_NAME}}
-        input: ./build/bin
-        # output: # optional, default is .
+    - name: GitHub Archive Action
+      uses: githubocto/github-archive-action@v1.0.0
 
