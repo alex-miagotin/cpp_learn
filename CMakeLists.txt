@@ -10,7 +10,12 @@ else()
     message(STATUS "OS: unknown")
 endif()
 
-set(PROJECT_NAME "cmake_project")
+if (PROJECT_NAME)
+    message(STATUS "Project name: ${PROJECT_NAME}")
+else()
+    message(STATUS "Project name: not set. Set to default cmake_project")
+    set(PROJECT_NAME "cmake_project")
+endif()
 
 # common options
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/archive)

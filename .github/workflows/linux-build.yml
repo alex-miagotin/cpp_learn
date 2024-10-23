@@ -9,6 +9,7 @@ on:
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
+  PROJECT_NAME: Fighter
 
 jobs:
   build:
@@ -31,4 +32,9 @@ jobs:
         chmod +x ./scripts/build.sh
         ./scripts/build.sh
       shell: bash
+
+    - name: Archive build artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.PROJECT_NAME }}-build 
 
