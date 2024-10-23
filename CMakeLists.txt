@@ -39,14 +39,6 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 set(LINKER_FLAGS "${LINKER_FLAGS} -Wl,-i")
 
 
-# app options
-
-# source_group("Source Files" FILES "src/utils/Math.cpp")
-# source_group("Header Files" FILES "src/utils/Math.hpp")
-
-# source_group("Source Files" FILES "src/game/Character.cpp" "src/game/Weapon.cpp")
-# source_group("Header Files" FILES "src/game/Character.hpp" "src/game/Weapon.hpp")
-
 # Main project
 set (SOURCES
     src/main.cpp
@@ -98,6 +90,13 @@ if (WIN32)
     # TODO: check on windows with msbuild
     target_compile_definitions(game_library PUBLIC _EXPORTING)
     target_compile_definitions(${PROJECT_NAME} PUBLIC _IMPORTING)
+endif()
+
+message("Using ${CMAKE_CXX_COMPILER_ID} compiler")
+if(MSVC)
+    message("MSVC version: ${MSVC_VERSION}")
+    message("MSVC toolset version: ${MSVC_TOOLSET_VERSION}")
+    target_compile_options(${PROJECT_NAME} PRIVATE /FAc)
 endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE utils_library game_library)
