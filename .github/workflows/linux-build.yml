@@ -23,12 +23,10 @@ jobs:
     - name: Clear conan home
       run: rm -rf ~/.conan2/*
 
-    - name: Cache conan dependencies
-      id: cache-conan-dependencies
-      uses: actions/cache@v4
-      with:
-        path: ~/.conan2
-        key: conan-dependencies-${{ runner.os }}-${{ runner.arch }}-${{ steps.system-info.outputs.release }}-${{ hashFiles('conanfile.txt') }}
+    - name: Install dependencies with conan
+      shell: bash
+      run: |
+        pip install conan
 
     - name: Configure conan
       run: |
