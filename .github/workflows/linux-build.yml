@@ -20,14 +20,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Clear conan home
-      run: rm -rf ~/.conan2/*
-
-    - name: Install dependencies with conan
-      shell: bash
-      run: |
-        pip install conan
-
     - name: Configure conan
       run: |
         chmod +x ./scripts/conan_build.sh
