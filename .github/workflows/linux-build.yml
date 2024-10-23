@@ -33,13 +33,8 @@ jobs:
         ./scripts/build.sh
       shell: bash
 
-    - name: GitHub Archive Action
-      shell: bash
-      run: |
-        zip -r ${{env.TARGET}}-${{env.BUILD_TYPE}}.zip ./build/bin
-
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: ${{env.TARGET}}-${{env.BUILD_TYPE}}
-        path: ${{env.TARGET}}-${{env.BUILD_TYPE}}.zip
+        name: ${{env.PROJECT_NAME}}-${{env.BUILD_TYPE}}
+        path: ./build/bin
