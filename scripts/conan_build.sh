@@ -16,15 +16,24 @@ if ! conan profile list | grep -q "default"; then
     conan profile detect
 fi
 
+
+
+
 unameOut="$(uname -s)"
 case "${unameOut}" in
-    Linux*)     machine=Linux;;
-    Darwin*)    machine=Mac;;
-    CYGWIN*)    machine=Cygwin;;
-    MINGW*)     machine=MinGw;;
-    MSYS_NT*)   machine=Git;;
-    *)          machine="UNKNOWN:${unameOut}"
+    Linux*)     
+        machine=Linux
+        conan install . -c tools.cmake.cmaketoolchain:generator=Ninja --output-folder=build --build=missing --settings=compiler.cppstd=20
+        echo "Linux build ran";;
+    Darwin*)    
+        machine=Mac;;
+    CYGWIN*)    
+        machine=Cygwin;;
+    MINGW*)     
+        conan install . --output-folder=build --build=missing --settings=compiler.cppstd=20
+        machine=MinGw;;
+    MSYS_NT*)   
+        machine=Git;;
+    *)          
+        machine="UNKNOWN:${unameOut}"
 esac
-echo ${machine}
-
-conan install . -c tools.cmake.cmaketoolchain:generator=Ninja --output-folder=build --build=missing --settings=compiler.cppstd=20
