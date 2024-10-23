@@ -36,5 +36,10 @@ jobs:
     - name: GitHub Archive Action
       shell: bash
       run: |
-        zip -r ${{env.PROJECT_NAME}}.zip ./build/bin
+        zip -r ${{env.TARGET}}-${{env.BUILD_TYPE}}.zip ./build/bin
 
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{env.TARGET}}-${{env.BUILD_TYPE}}
+        path: ${{env.TARGET}}-${{env.BUILD_TYPE}}.zip
