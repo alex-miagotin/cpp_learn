@@ -17,8 +17,6 @@ if ! conan profile list | grep -q "default"; then
 fi
 
 
-
-
 unameOut="$(uname -s)"
 case "${unameOut}" in
     Linux*)     
@@ -31,6 +29,7 @@ case "${unameOut}" in
         machine=Cygwin;;
     MINGW*)     
         conan install . --output-folder=build --build=missing --settings=compiler.cppstd=20
+        echo "MinGW build ran"
         machine=MinGw;;
     MSYS_NT*)   
         machine=Git;;

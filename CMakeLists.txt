@@ -32,12 +32,11 @@ message(STATUS "CXX Standart: ${CMAKE_CXX_STANDARD}")
 # set(CMAKE_BUILD_TYPE Debug)
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 set(CMAKE_TOOLCHAIN_FILE "conan_toolchain.cmake")
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -save-temps=obj -Wall -Wextra")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -save-temps=obj")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g") # -g -s -Ofast
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 set(LINKER_FLAGS "${LINKER_FLAGS} -Wl,-i")
-
 
 # Main project
 set (SOURCES
@@ -47,12 +46,20 @@ set (SOURCES
 set (INCLUDES
 )
 
+### Project
 project(${PROJECT_NAME} VERSION 0.0.1 DESCRIPTION "CMake project")
+
 add_executable(
     ${PROJECT_NAME} 
     ${SOURCES}
     ${INCLUDES}
 )
+
+if(MSVC)
+  target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
+else()
+  target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
 
 option(SKIP_GAME_OPTION "Skip game" OFF)
 if(SKIP_GAME_OPTION)
