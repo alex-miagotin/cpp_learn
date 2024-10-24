@@ -13,9 +13,10 @@
     #define MATH_API __attribute__ ((visibility ("default")))
 #endif
 
-namespace LifeExe {
+namespace LifeExe
+{
     MATH_API int max(int x, int y);
     MATH_API int factorial(int n);
     MATH_API int sum(int n);
     MATH_API int randomInt(int min, int max);
-}
+}  // namespace LifeExe

@@ -1,8 +1,8 @@
+#include "Math.hpp"
 #include <random>
 
-#include "Math.hpp"
-
-namespace LifeExe {
+namespace LifeExe
+{
     int max(int x, int y)
     {
         return x > y ? x : y;
@@ -23,8 +23,8 @@ namespace LifeExe {
         std::random_device rd;
         std::mt19937 gen(rd());
 
-        std::uniform_int_distribution<int> dist(min, max);
-        
+        std::uniform_int_distribution<> dist(min, max);
+
         return dist(gen);
     }
-}
+}  // namespace LifeExe
