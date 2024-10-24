@@ -52,8 +52,8 @@ if(SKIP_GAME_OPT)
     target_compile_definitions(${PROJECT_NAME} PUBLIC SKIP_GAME)
 endif()
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}Lib MathLib)
-target_link_libraries(${PROJECT_NAME}Lib PRIVATE MathLib)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}Lib)
+target_link_libraries(${PROJECT_NAME}Lib PUBLIC MathLib)
 target_link_libraries(${PROJECT_NAME}TestRunner PRIVATE ${PROJECT_NAME}Lib MathLib)
 
 # includes
