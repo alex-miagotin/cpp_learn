@@ -1,102 +1,71 @@
 # general info
-cmake_minimum_required (VERSION 3.16.3)
-message(STATUS "CMAKE version: ${CMAKE_VERSION}")
+cmake_minimum_required(VERSION 3.16.3)
+set(PROJECT_NAME FightClubGame)
+project(${PROJECT_NAME} VERSION 1.0.0)
+message("------------- Project files generation for ${PROJECT_NAME} -------------")
 
-if (WIN32)
-    message(STATUS "OS: Windows")
-elseif(LINUX)
-    message(STATUS "OS: Linux")
-else()
-    message(STATUS "OS: unknown")
-endif()
-
-if (PROJECT_NAME)
-    message(STATUS "Project name: ${PROJECT_NAME}")
-else()
-    message(STATUS "Project name: not set. Set to default cmake_project")
-    set(PROJECT_NAME "cmake_project")
-endif()
+message(STATUS "CXX Standart: ${CMAKE_CXX_STANDARD}")
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 # common options
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/archive)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/lib)
+set(CMAKE_TOOLCHAIN_FILE "conan_toolchain.cmake")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
-set_property(GLOBAL PROPERTY USE_FOLDERS OFF)
-set(CMAKE_CXX_REGENERATION TRUE)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+set(CMAKE_SUPPRESS_REGENERATION TRUE)
 
 # cpp options
 set(CMAKE_CXX_STANDARD 20)
-message(STATUS "CXX Standart: ${CMAKE_CXX_STANDARD}")
-# set(CMAKE_BUILD_TYPE Debug)
-message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
-set(CMAKE_TOOLCHAIN_FILE "conan_toolchain.cmake")
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -save-temps=obj")
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g") # -g -s -Ofast
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
-set(LINKER_FLAGS "${LINKER_FLAGS} -Wl,-i")
+# set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /FA")
 
-# Main project
-set (SOURCES
-    src/main.cpp
-)
+# sources
+set(SOURCES src/main.cpp)
 
-set (INCLUDES
-)
+set(MATH_SOURCES src/utils/Math.cpp)
+set(MATH_INCLUDES src/utils/Math.hpp)
 
-### Project
-project(${PROJECT_NAME} VERSION 0.0.1 DESCRIPTION "CMake project")
+set(DLL_GAME_SOURCES 
+    src/game/Weapon.cpp 
+    src/game/Character.cpp)
 
-add_executable(
-    ${PROJECT_NAME} 
-    ${SOURCES}
-    ${INCLUDES}
-)
+set(DLL_GAME_INCLUDES 
+    src/game/Weapon.hpp 
+    src/game/Character.hpp)
 
-if(MSVC)
-  target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
-else()
-  target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic -Werror)
+source_group("src files/game" FILES "src/game/Weapon.cpp" "src/game/Character.cpp")
+source_group("Header files/game" FILES "src/game/Weapon.hpp" "src/game/Character.hpp")
+
+# targets
+add_executable(${PROJECT_NAME} ${SOURCES})
+add_library(MathLib STATIC ${MATH_SOURCES} ${MATH_INCLUDES})
+add_library(${PROJECT_NAME}Lib SHARED ${DLL_GAME_SOURCES} ${DLL_GAME_INCLUDES})
+add_executable(${PROJECT_NAME}TestRunner src/tests/main.cpp)
+
+target_compile_definitions(${PROJECT_NAME}Lib PRIVATE _EXPORTING)
+target_compile_definitions(${PROJECT_NAME} PUBLIC _IMPORTING)
+
+option(SKIP_GAME_OPT "Skip game" OFF)
+if(SKIP_GAME_OPT)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC SKIP_GAME)
 endif()
 
-option(SKIP_GAME_OPTION "Skip game" OFF)
-if(SKIP_GAME_OPTION)
-    message(STATUS "Skip game")
-    target_compile_definitions(${PROJECT_NAME} PRIVATE SKIP_GAME)
-elseif()
-    message(STATUS "Build game")
-endif()
+target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}Lib)
+target_link_libraries(${PROJECT_NAME}Lib PRIVATE MathLib)
+target_link_libraries(${PROJECT_NAME}TestRunner PRIVATE ${PROJECT_NAME}Lib MathLib)
 
-target_precompile_headers(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.hpp)
+# includes
+set(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}TestRunner ${PROJECT_NAME}Lib)
+foreach(target IN LISTS TARGETS)
+    target_include_directories(${target} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+endforeach()
 
-# Math library - static
-set(MATH_SOURCES
-    src/utils/Math.cpp
-)
-set(MATH_INCLUDES
-    src/utils/Math.hpp
-)
-add_library(utils_library STATIC ${MATH_SOURCES} ${MATH_INCLUDES})
-target_include_directories(utils_library PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
-
-# Game library - dll
-set(DLL_GAME_SOURCES
-    src/game/Character.cpp
-    src/game/Weapon.cpp
-)
-set(DLL_GAME_INCLUDES
-    src/game/Character.hpp
-    src/game/Weapon.hpp
-)
-add_library(game_library SHARED ${DLL_GAME_SOURCES} ${DLL_GAME_INCLUDES})
-target_include_directories(game_library PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
-
-if (WIN32)
-    # TODO: check on windows with msbuild
-    target_compile_definitions(game_library PUBLIC _EXPORTING)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC _IMPORTING)
+if(WIN32)
+    message("Running on Windows")
+elseif(LINUX)
+    message("Running on Linux")
 endif()
 
 message("Using ${CMAKE_CXX_COMPILER_ID} compiler")
@@ -106,15 +75,7 @@ if(MSVC)
     target_compile_options(${PROJECT_NAME} PRIVATE /FAc)
 endif()
 
-target_link_libraries(${PROJECT_NAME} PRIVATE utils_library game_library)
-
-# tests
-set(PROJECT_TESTS ${PROJECT_NAME}_tests)
-add_executable(
-    ${PROJECT_TESTS}
-    src/tests/main.cpp
-)
-target_link_libraries(${PROJECT_TESTS} PRIVATE game_library utils_library)
-target_include_directories(${PROJECT_TESTS} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
-
-message("-------------- Compiler flags: ${CMAKE_CXX_FLAGS} --------------")
+message("Compiler flags: ${CMAKE_CXX_FLAGS}")
+message("Compiler debug flags: ${CMAKE_CXX_FLAGS_DEBUG}")
+message("Compiler release flags: ${CMAKE_CXX_FLAGS_RELEASE}")
+message("Configuration types: ${CMAKE_CONFIGURATION_TYPES}")
