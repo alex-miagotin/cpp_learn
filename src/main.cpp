@@ -19,7 +19,6 @@ int main()
 
   while (true) {
     std::cout << "================= Round " << round << " =================" << std::endl;
-    
     int randomHeroIndex = LifeExe::randomInt(0, 1);
     Character * firstAttacker = heroes[randomHeroIndex];
     Character * secondsAttacker = heroes[1 - randomHeroIndex];
