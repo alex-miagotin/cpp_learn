@@ -44,6 +44,7 @@ add_library(MathLib STATIC ${MATH_SOURCES} ${MATH_INCLUDES})
 add_library(${PROJECT_NAME}Lib SHARED ${DLL_GAME_SOURCES} ${DLL_GAME_INCLUDES})
 add_executable(${PROJECT_NAME}TestRunner src/tests/main.cpp)
 
+target_compile_definitions(MathLib PRIVATE _EXPORTING)
 target_compile_definitions(${PROJECT_NAME}Lib PRIVATE _EXPORTING)
 target_compile_definitions(${PROJECT_NAME} PUBLIC _IMPORTING)
 
