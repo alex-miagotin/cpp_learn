@@ -13,7 +13,7 @@ case "${unameOut}" in
     CYGWIN*)    
         machine=Cygwin;;
     MINGW*)     
-        cmake -B ./build -G "Visual Studio 17 2022" -A x64 -DCMAKE_TOOLCHAIN_FILE="conan_toolchain.cmake"
+        cmake --build build -G "Visual Studio 17 2022" -A x64 -DCMAKE_TOOLCHAIN_FILE="conan_toolchain.cmake"
         machine=MinGw;;
     MSYS_NT*)   
         machine=Git;;
