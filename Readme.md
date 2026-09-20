@@ -17,6 +17,7 @@ Study notes on **how a C++ program is built** (preprocessing, compilation, linki
 - [Build speed-ups and libraries](#build-speed-ups-and-libraries)
 - [Build tools](#build-tools)
 - [Sample project](#sample-project)
+- [License](#license)
 
 ## Installation
 
@@ -100,3 +101,7 @@ Study notes on **how a C++ program is built** (preprocessing, compilation, linki
 | `scripts/` | `conan_build.sh` (dependencies), `build.sh` (build), `fresh.sh` (clean rebuild) |
 | `.github/workflows/` | Linux and Windows builds on push and pull requests to `development` |
 | `.clang-format` | Code style |
+
+## License
+
+Released under the [MIT License](LICENSE).
